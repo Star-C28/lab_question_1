@@ -13,6 +13,7 @@ import {
 import { useGame } from '../context/GameContext';
 import { GameCard } from '../components/common/GameCard';
 import { AdPlaceholder } from '../components/common/AdPlaceholder';
+import { CategoryFilter } from '../components/common/CategoryFilter';
 
 export const AllGamesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,6 +28,17 @@ export const AllGamesPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [sortBy, setSortBy] = useState<string>(initialSort);
   const [showOnlyFavs, setShowOnlyFavs] = useState<boolean>(onlyFavorites);
+
+  // Compute game counts per category for the filter badges
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    categories.forEach((cat) => {
+      counts[cat.name] = games.filter(
+        (g) => g.category.toLowerCase() === cat.name.toLowerCase()
+      ).length;
+    });
+    return counts;
+  }, [games, categories]);
 
   // Sync state with URL params changes
   useEffect(() => {
@@ -56,9 +68,15 @@ export const AllGamesPage: React.FC = () => {
           }
         }
 
-        // Category filter
-        if (selectedCategory !== 'All' && game.category !== selectedCategory) {
-          return false;
+        // Category & Tag filter
+        if (selectedCategory !== 'All') {
+          const catMatches = game.category.toLowerCase() === selectedCategory.toLowerCase();
+          const tagMatches = game.tags.some(
+            (t) => t.toLowerCase() === selectedCategory.toLowerCase()
+          );
+          if (!catMatches && !tagMatches) {
+            return false;
+          }
         }
 
         // Favorites filter
@@ -164,31 +182,24 @@ export const AllGamesPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Category Pill Filters */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
-          <button
-            onClick={() => setSelectedCategory('All')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-colors ${
-              selectedCategory === 'All'
-                ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-md'
-                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300'
-            }`}
-          >
-            All Categories
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.name)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-colors ${
-                selectedCategory === cat.name
-                  ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-md'
-                  : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300'
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
+        {/* Dedicated Category and Tag Filter Component */}
+        <div className="pt-2 border-t border-slate-800/80">
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={(cat) => {
+              setSelectedCategory(cat);
+              const newParams = new URLSearchParams(searchParams);
+              if (cat === 'All') {
+                newParams.delete('category');
+              } else {
+                newParams.set('category', cat);
+              }
+              setSearchParams(newParams);
+            }}
+            gameCounts={categoryCounts}
+            totalGamesCount={games.length}
+          />
         </div>
       </div>
 
