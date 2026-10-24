@@ -1,0 +1,6 @@
+{
+  "name": "PlayZone – Free Online Games",
+  "description": "Play high-quality free online browser games including Snake, Breakout, Memory Match, Sliding Tile Puzzle, Tic Tac Toe, and custom arcade games with leaderboards and admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

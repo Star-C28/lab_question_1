@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-dark: #0B1020;
+    --card-dark: #172033;
+    --primary-purple: #8B5CF6;
+    --secondary-cyan: #06B6D4;
+  }
+
+  body {
+    background-color: #0B1020;
+    color: #F1F5F9;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Scrollbars for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0B1020;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Gaming visual glow helpers */
+.neon-glow-purple {
+  box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.4);
+}
+
+.neon-glow-cyan {
+  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.4);
+}
+
+.neon-text-purple {
+  text-shadow: 0 0 12px rgba(139, 92, 246, 0.6);
+}
+
+.neon-text-cyan {
+  text-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
+}
+
+.gaming-card-border {
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  transition: all 0.25s ease-in-out;
+}
+
+.gaming-card-border:hover {
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(11, 16, 32, 0.9), 0 0 15px -2px rgba(139, 92, 246, 0.25);
+}
+
+/* Subtle arcade grid overlay */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
